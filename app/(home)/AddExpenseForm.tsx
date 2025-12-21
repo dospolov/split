@@ -16,10 +16,16 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSet,
+  FieldLegend,
+  FieldDescription,
+  FieldContent,
+  FieldTitle,
 } from "@/components/ui/field"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
-import type { Expense } from "./types"
+import type { Expense, Friend } from "./types"
 import { asUUID } from "@/lib/utils"
 
 export const addExpenseFormSchema = z.object({
@@ -28,17 +34,21 @@ export const addExpenseFormSchema = z.object({
     .min(3, "Expense title must be at least 3 characters.")
     .max(32, "Expense title must be at most 32 characters."),
   amount: z.number().min(1, "Expense amount must be at least 1."),
+  fromId: z.string().optional(),
 })
 
 export function AddExpenseForm({
   addExpense,
+  friends,
 }: {
   addExpense: (expense: Expense) => void
+  friends: Friend[]
 }) {
   const form = useForm({
     defaultValues: {
       title: "",
       amount: 1,
+      fromId: "",
     },
     validators: {
       onSubmit: addExpenseFormSchema,
@@ -49,10 +59,15 @@ export function AddExpenseForm({
         id: asUUID(crypto.randomUUID()),
         title: value.title,
         amount: value.amount,
+        fromId: value.fromId,
       })
       form.reset()
     },
   })
+
+  if (!friends.length) {
+    return <div>No friends added yet</div>
+  }
 
   return (
     <Card className="w-full">
@@ -115,6 +130,46 @@ export function AddExpenseForm({
                       <FieldError errors={field.state.meta.errors} />
                     )}
                   </Field>
+                )
+              }}
+            </form.Field>
+            <form.Field name="fromId">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <FieldSet>
+                    <FieldLegend>From</FieldLegend>
+                    <RadioGroup
+                      name={field.name}
+                      value={field.state.value}
+                      onValueChange={field.handleChange}
+                    >
+                      {friends.map((friend) => (
+                        <FieldLabel
+                          key={friend.id}
+                          htmlFor={`form-tanstack-radiogroup-${friend.id}`}
+                        >
+                          <Field
+                            orientation="horizontal"
+                            data-invalid={isInvalid}
+                          >
+                            <FieldContent>
+                              <FieldTitle>{friend.name}</FieldTitle>
+                            </FieldContent>
+                            <RadioGroupItem
+                              value={friend.id}
+                              id={`form-tanstack-radiogroup-${friend.id}`}
+                              aria-invalid={isInvalid}
+                            />
+                          </Field>
+                        </FieldLabel>
+                      ))}
+                    </RadioGroup>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </FieldSet>
                 )
               }}
             </form.Field>

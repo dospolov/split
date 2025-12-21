@@ -20,7 +20,7 @@ export function PeopleForm() {
           <div key={friend.id}>{friend.name}</div>
         ))}
       </div>
-      <AddExpenseForm addExpense={addExpense} />
+      <AddExpenseForm addExpense={addExpense} friends={friends} />
       <div className="flex flex-col gap-4">
         {expenses.map((expense) => (
           <div key={expense.id}>
