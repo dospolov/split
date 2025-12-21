@@ -17,10 +17,11 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import type { Expense, Friend } from "../types"
 import { addExpenseFormSchema } from "../schema"
 
-import type { AddExpenseFormValues } from "./formTypes"
+import type { AddExpenseFormValues } from "../types"
 import { TitleField } from "./TitleField"
 import { AmountField } from "./AmountField"
 import { FromField } from "./FromField"
+import { WithField } from "./WithField"
 
 export function AddExpenseForm({
   addExpense,
@@ -34,6 +35,7 @@ export function AddExpenseForm({
       title: "",
       amount: 1,
       fromId: undefined,
+      withId: undefined,
     },
     resolver: zodResolver(addExpenseFormSchema),
     mode: "onBlur", // optional, closer to your "touched" logic
@@ -46,6 +48,7 @@ export function AddExpenseForm({
       title: value.title,
       amount: value.amount,
       fromId: value.fromId,
+      withId: value.withId,
     })
     methods.reset()
   }
@@ -61,10 +64,11 @@ export function AddExpenseForm({
 
         <CardContent>
           <form id="add-expense-form" onSubmit={methods.handleSubmit(onSubmit)}>
-            <FieldGroup className="flex flex-row gap-3">
+            <FieldGroup className="flex flex-row gap-4">
               <TitleField />
               <AmountField />
               <FromField friends={friends} />
+              <WithField friends={friends} />
             </FieldGroup>
           </form>
         </CardContent>

@@ -14,4 +14,5 @@ export const addExpenseFormSchema = z.object({
     .max(32, "Expense title must be at most 32 characters."),
   amount: z.number().min(1, "Expense amount must be at least 1."),
   fromId: z.union([z.uuid(), z.undefined()]),
+  withId: z.union([z.uuid(), z.undefined()]),
 })

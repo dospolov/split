@@ -5,9 +5,9 @@ import { FieldError, FieldLabel, FieldSet } from "@/components/ui/field"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import type { Friend } from "../types"
-import type { AddExpenseFormValues } from "./formTypes"
+import type { AddExpenseFormValues } from "../types"
 
-export function FromField({ friends }: { friends: Friend[] }) {
+export function WithField({ friends }: { friends: Friend[] }) {
   const {
     control,
     formState: { errors, touchedFields },
@@ -19,10 +19,10 @@ export function FromField({ friends }: { friends: Friend[] }) {
 
   return (
     <FieldSet className="w-3/10">
-      <FieldLabel htmlFor="fromId">From</FieldLabel>
+      <FieldLabel htmlFor="withId">With</FieldLabel>
 
       <Controller
-        name="fromId"
+        name="withId"
         control={control}
         render={({ field }) => (
           <RadioGroup
@@ -31,7 +31,7 @@ export function FromField({ friends }: { friends: Friend[] }) {
             onValueChange={field.onChange}
           >
             {friends.map((friend) => {
-              const id = `from-${friend.id}`
+              const id = `with-${friend.id}`
               return (
                 <div className="flex items-center gap-3" key={friend.id}>
                   <RadioGroupItem
