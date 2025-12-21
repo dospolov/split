@@ -1,5 +1,5 @@
 import Header from "./Header"
-import PeopleForm from "./PeopleForm"
+import { PeopleForm } from "./PeopleForm"
 
 export default function Home() {
   return (
