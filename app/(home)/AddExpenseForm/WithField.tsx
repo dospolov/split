@@ -2,7 +2,6 @@
 
 import { Controller, useFormContext } from "react-hook-form"
 import { FieldError, FieldLabel, FieldSet } from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import type { Friend } from "../types"

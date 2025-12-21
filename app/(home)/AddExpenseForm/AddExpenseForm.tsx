@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, FormProvider } from "react-hook-form"
 import { toast } from "sonner"
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,11 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
-
-import type { Expense, Friend } from "../types"
+import type { Expense, Friend, AddExpenseFormValues } from "../types"
 import { addExpenseFormSchema } from "../schema"
-
-import type { AddExpenseFormValues } from "../types"
 import { TitleField } from "./TitleField"
 import { AmountField } from "./AmountField"
 import { FromField } from "./FromField"
