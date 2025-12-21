@@ -26,7 +26,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
 import type { Expense, Friend } from "./types"
-import { asUUID } from "@/lib/utils"
 
 export const addExpenseFormSchema = z.object({
   title: z
@@ -34,7 +33,7 @@ export const addExpenseFormSchema = z.object({
     .min(3, "Expense title must be at least 3 characters.")
     .max(32, "Expense title must be at most 32 characters."),
   amount: z.number().min(1, "Expense amount must be at least 1."),
-  fromId: z.string().optional(),
+  fromId: z.union([z.uuid(), z.undefined()]),
 })
 
 export function AddExpenseForm({
@@ -48,7 +47,7 @@ export function AddExpenseForm({
     defaultValues: {
       title: "",
       amount: 1,
-      fromId: "",
+      fromId: undefined as string | undefined,
     },
     validators: {
       onSubmit: addExpenseFormSchema,
@@ -56,7 +55,7 @@ export function AddExpenseForm({
     onSubmit: async ({ value }) => {
       toast.success("You have added a new expense")
       addExpense({
-        id: asUUID(crypto.randomUUID()),
+        id: crypto.randomUUID(),
         title: value.title,
         amount: value.amount,
         fromId: value.fromId,

@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
 import type { Friend } from "./types"
-import { asUUID } from "@/lib/utils"
 
 export const addFrendFormSchema = z.object({
   name: z
@@ -44,7 +43,7 @@ export function AddFriendForm({
     onSubmit: async ({ value }) => {
       toast.success("You have added a new person")
       addFriend({
-        id: asUUID(crypto.randomUUID()),
+        id: crypto.randomUUID(),
         name: value.name,
       })
       form.reset()
