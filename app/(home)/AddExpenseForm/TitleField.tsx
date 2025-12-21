@@ -1,26 +1,35 @@
 "use client"
 
-import type { AnyFieldApi } from "@tanstack/react-form"
+import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
+import type { AddExpenseFormValues } from "./formTypes"
 
-export function TitleField({ field }: { field: AnyFieldApi }) {
-  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+export function TitleField() {
+  const {
+    register,
+    formState: { errors, touchedFields },
+  } = useFormContext<AddExpenseFormValues>()
+
+  const isTouched = !!touchedFields.title
+  const hasError = !!errors.title
+  const isInvalid = isTouched && hasError
 
   return (
     <Field data-invalid={isInvalid} className="w-3/10">
-      <FieldLabel htmlFor={field.name}>Title</FieldLabel>
+      <FieldLabel htmlFor="title">Title</FieldLabel>
       <Input
-        id={field.name}
-        name={field.name}
-        value={field.state.value}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={isInvalid}
-        placeholder="Pizza"
+        id="title"
         autoComplete="off"
+        placeholder="Pizza"
+        aria-invalid={isInvalid}
+        {...register("title")}
       />
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && (
+        <FieldError
+          errors={[{ message: errors.title?.message }].filter(Boolean)}
+        />
+      )}
     </Field>
   )
 }
