@@ -19,33 +19,33 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import * as z from "zod"
-import type { Friend } from "./types"
+import type { Expense } from "./types"
 import { asUUID } from "@/lib/utils"
 
-export const addFrendFormSchema = z.object({
-  name: z
+export const addExpenseFormSchema = z.object({
+  title: z
     .string()
-    .min(3, "Friend name must be at least 3 characters.")
-    .max(32, "Friend name must be at most 32 characters."),
+    .min(3, "Expense title must be at least 3 characters.")
+    .max(32, "Expense title must be at most 32 characters."),
 })
 
-export function AddFriendForm({
-  addFriend,
+export function AddExpenseForm({
+  addExpense,
 }: {
-  addFriend: (friend: Friend) => void
+  addExpense: (expense: Expense) => void
 }) {
   const form = useForm({
     defaultValues: {
-      name: "",
+      title: "",
     },
     validators: {
-      onSubmit: addFrendFormSchema,
+      onSubmit: addExpenseFormSchema,
     },
     onSubmit: async ({ value }) => {
-      toast.success("You have added a new person")
-      addFriend({
+      toast.success("You have added a new expense")
+      addExpense({
         id: asUUID(crypto.randomUUID()),
-        name: value.name,
+        title: value.title,
       })
       form.reset()
     },
@@ -54,27 +54,24 @@ export function AddFriendForm({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Add a new friend</CardTitle>
-        <CardDescription>This cannot be changed later.</CardDescription>
+        <CardTitle>Add a new expense</CardTitle>
       </CardHeader>
       <CardContent>
         <form
-          id="add-friend-form"
+          id="add-expense-form"
           onSubmit={(e) => {
             e.preventDefault()
             form.handleSubmit()
           }}
         >
           <FieldGroup>
-            <form.Field name="name">
+            <form.Field name="title">
               {(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Friend&apos;s name
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Expense title</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -82,7 +79,7 @@ export function AddFriendForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="Alex"
+                      placeholder="Pizza"
                       autoComplete="off"
                     />
                     {isInvalid && (
@@ -97,7 +94,7 @@ export function AddFriendForm({
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal">
-          <Button type="submit" form="add-friend-form">
+          <Button type="submit" form="add-expense-form">
             Add
           </Button>
         </Field>
