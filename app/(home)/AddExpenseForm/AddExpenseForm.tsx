@@ -35,7 +35,7 @@ export function AddExpenseForm({
       title: "",
       amount: 1,
       fromId: undefined,
-      withId: undefined,
+      withId: [],
     },
     resolver: zodResolver(addExpenseFormSchema),
     mode: "onBlur", // optional, closer to your "touched" logic

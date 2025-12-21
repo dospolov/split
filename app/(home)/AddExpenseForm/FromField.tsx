@@ -5,7 +5,7 @@ import { FieldError, FieldLabel, FieldSet } from "@/components/ui/field"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import type { Friend } from "../types"
-import type { AddExpenseFormValues } from "./formTypes"
+import type { AddExpenseFormValues } from "../types"
 
 export function FromField({ friends }: { friends: Friend[] }) {
   const {
@@ -18,7 +18,7 @@ export function FromField({ friends }: { friends: Friend[] }) {
   const isInvalid = isTouched && hasError
 
   return (
-    <FieldSet className="w-3/10">
+    <FieldSet className="w-3/10 gap-3">
       <FieldLabel htmlFor="fromId">From</FieldLabel>
 
       <Controller

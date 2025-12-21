@@ -1,7 +1,9 @@
 "use client"
 
-import { useForm } from "@tanstack/react-form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,8 +20,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+
 import type { Friend } from "../types"
 import { addFrendFormSchema } from "../schema"
+import { z } from "zod"
+
+type FormValues = z.infer<typeof addFrendFormSchema>
 
 export function AddFriendForm({
   addFriend,
@@ -28,22 +34,30 @@ export function AddFriendForm({
   addFriend: (friend: Friend) => void
   friends: Friend[]
 }) {
-  const form = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, touchedFields },
+  } = useForm<FormValues>({
+    resolver: zodResolver(addFrendFormSchema),
     defaultValues: {
       name: "",
     },
-    validators: {
-      onSubmit: addFrendFormSchema,
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("You have added a new person")
-      addFriend({
-        id: crypto.randomUUID(),
-        name: value.name,
-      })
-      form.reset()
-    },
   })
+
+  const onSubmit = (values: FormValues) => {
+    toast.success("You have added a new person")
+
+    addFriend({
+      id: crypto.randomUUID(),
+      name: values.name,
+    })
+
+    reset()
+  }
+
+  const isInvalid = touchedFields.name && !!errors.name
 
   return (
     <div className="flex gap-4">
@@ -52,42 +66,31 @@ export function AddFriendForm({
           <CardTitle>Add a new friend</CardTitle>
           <CardDescription>This cannot be changed later.</CardDescription>
         </CardHeader>
+
         <CardContent>
-          <form
-            id="add-friend-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              form.handleSubmit()
-            }}
-          >
+          <form id="add-friend-form" onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <form.Field name="name">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Alex"
-                        autoComplete="off"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+
+                <Input
+                  id="name"
+                  placeholder="Alex"
+                  autoComplete="off"
+                  aria-invalid={isInvalid}
+                  {...register("name")}
+                />
+
+                {isInvalid && (
+                  <FieldError
+                    errors={[{ message: errors.name?.message }].filter(Boolean)}
+                  />
+                )}
+              </Field>
             </FieldGroup>
           </form>
         </CardContent>
+
         <CardFooter>
           <Field orientation="horizontal">
             <Button type="submit" form="add-friend-form">
