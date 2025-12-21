@@ -23,7 +23,9 @@ export function PeopleForm() {
       <AddExpenseForm addExpense={addExpense} />
       <div className="flex flex-col gap-4">
         {expenses.map((expense) => (
-          <div key={expense.id}>{expense.title}</div>
+          <div key={expense.id}>
+            {expense.title}: {expense.amount} PLN
+          </div>
         ))}
       </div>
     </>

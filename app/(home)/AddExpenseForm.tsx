@@ -27,6 +27,7 @@ export const addExpenseFormSchema = z.object({
     .string()
     .min(3, "Expense title must be at least 3 characters.")
     .max(32, "Expense title must be at most 32 characters."),
+  amount: z.number().min(1, "Expense amount must be at least 1."),
 })
 
 export function AddExpenseForm({
@@ -37,6 +38,7 @@ export function AddExpenseForm({
   const form = useForm({
     defaultValues: {
       title: "",
+      amount: 1,
     },
     validators: {
       onSubmit: addExpenseFormSchema,
@@ -46,6 +48,7 @@ export function AddExpenseForm({
       addExpense({
         id: asUUID(crypto.randomUUID()),
         title: value.title,
+        amount: value.amount,
       })
       form.reset()
     },
@@ -64,14 +67,14 @@ export function AddExpenseForm({
             form.handleSubmit()
           }}
         >
-          <FieldGroup>
+          <FieldGroup className="flex flex-row">
             <form.Field name="title">
               {(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Expense title</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Title</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -80,6 +83,32 @@ export function AddExpenseForm({
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder="Pizza"
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                )
+              }}
+            </form.Field>
+            <form.Field name="amount">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
+                      aria-invalid={isInvalid}
+                      placeholder="10"
                       autoComplete="off"
                     />
                     {isInvalid && (
