@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input"
 
 import type { Friend } from "../types"
 import { addFrendFormSchema } from "../schema"
-import { z } from "zod"
+import type { z } from "zod"
 
 type FormValues = z.infer<typeof addFrendFormSchema>
 
