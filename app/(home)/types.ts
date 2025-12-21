@@ -1,6 +1,6 @@
 import * as z from "zod"
-import type { addFrendFormSchema } from "./AddFriendForm"
-import type { addExpenseFormSchema } from "./AddExpenseForm"
+import type { addFrendFormSchema } from "./schema"
+import type { addExpenseFormSchema } from "./schema"
 
 export const UUIDSchema = z.uuid()
 
