@@ -5,21 +5,19 @@ export function createDemoFriends(): FriendsState {
   const ivan = crypto.randomUUID()
   const marat = crypto.randomUUID()
   const george = crypto.randomUUID()
-  const dima = crypto.randomUUID()
 
   return {
     byId: {
       [ivan]: { id: ivan, name: "Ivan" },
       [marat]: { id: marat, name: "Marat" },
       [george]: { id: george, name: "George" },
-      [dima]: { id: dima, name: "Dima" },
     },
-    allIds: [ivan, marat, george, dima],
+    allIds: [ivan, marat, george],
   }
 }
 
 export function createDemoTransactions(friends: FriendsState): Transaction[] {
-  const [ivan, marat, george, dima] = friends.allIds
+  const [ivan, marat, george] = friends.allIds
 
   const now = new Date().toISOString()
 
@@ -38,7 +36,7 @@ export function createDemoTransactions(friends: FriendsState): Transaction[] {
       id: crypto.randomUUID(),
       payerId: george,
       amount: 66,
-      participantIds: [marat, dima],
+      participantIds: [marat, george],
       title: "Beer",
       createdAt: now,
       updatedAt: now,
