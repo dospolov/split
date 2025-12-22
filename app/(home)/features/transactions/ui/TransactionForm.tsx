@@ -57,7 +57,6 @@ export function TransactionForm({
           participantIds: [],
           title: "",
         },
-
     mode: "onBlur",
   })
 
@@ -75,9 +74,21 @@ export function TransactionForm({
 
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-4"
       noValidate
+      className="space-y-4"
+      onSubmit={form.handleSubmit((value) => {
+        onSubmit(value)
+
+        // reset ONLY in "Add" mode
+        if (!initial) {
+          form.reset({
+            payerId: "",
+            amount: undefined,
+            participantIds: [],
+            title: "",
+          })
+        }
+      })}
     >
       {/* Title */}
       <Controller
@@ -99,14 +110,13 @@ export function TransactionForm({
         )}
       />
 
-      {/* Amount */}
+      {/* Amount (integers only, can be empty while typing) */}
       <Controller
         name="amount"
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
-
             <Input
               id={field.name}
               type="text"
@@ -117,21 +127,17 @@ export function TransactionForm({
               onChange={(e) => {
                 const raw = e.target.value
 
-                // allow empty
                 if (raw === "") {
                   field.onChange(undefined)
                   return
                 }
 
-                // allow only digits (no dot, no minus)
                 if (/^\d+$/.test(raw)) {
                   field.onChange(Number(raw))
                 }
-                // else ignore invalid char
               }}
               aria-invalid={fieldState.invalid}
             />
-
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
@@ -144,7 +150,6 @@ export function TransactionForm({
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor={field.name}>Payer</FieldLabel>
-            {/* SelectTrigger gets the id to connect label -> control */}
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger id={field.name} aria-invalid={fieldState.invalid}>
                 <SelectValue placeholder="Select payer" />
@@ -173,11 +178,8 @@ export function TransactionForm({
               {friendIds.map((id) => {
                 const checked = field.value.includes(id)
                 return (
-                  <label
-                    htmlFor={id}
-                    key={id}
-                    className="flex items-center gap-2 text-sm"
-                  >
+                  // biome-ignore lint/a11y/noLabelWithoutControl: "Label is inside"
+                  <label key={id} className="flex items-center gap-2 text-sm">
                     <Checkbox
                       checked={checked}
                       onCheckedChange={(v) => {
