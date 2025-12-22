@@ -88,6 +88,48 @@ export function useAppStore() {
     [setFriends],
   )
 
+  const deleteFriend = useCallback(
+    (id: string) => {
+      // 1) remove friend
+      setFriends((prev) => {
+        if (!prev.byId[id]) return prev
+
+        const { [id]: _, ...rest } = prev.byId
+        return {
+          byId: rest,
+          allIds: prev.allIds.filter((x) => x !== id),
+        }
+      })
+
+      // 2) update transactions:
+      // - remove friend from participantIds
+      // - if payerId was this friend -> drop tx (or you could require reassign)
+      // - if participants become empty -> drop tx
+      setTransactions((prev) =>
+        prev
+          .map((tx) => {
+            if (tx.payerId === id) return null
+
+            const nextParticipants = tx.participantIds.filter((x) => x !== id)
+            if (nextParticipants.length === 0) return null
+
+            if (nextParticipants.length !== tx.participantIds.length) {
+              return {
+                ...tx,
+                participantIds: nextParticipants,
+                updatedAt: new Date().toISOString(),
+                revision: tx.revision + 1,
+              }
+            }
+
+            return tx
+          })
+          .filter((x): x is Transaction => x !== null),
+      )
+    },
+    [setFriends, setTransactions],
+  )
+
   // ---- transaction actions ----
   const addTransaction = useCallback(
     (input: TransactionInput) => {
@@ -142,6 +184,7 @@ export function useAppStore() {
 
     addFriend,
     renameFriend,
+    deleteFriend,
 
     addTransaction,
     updateTransaction,

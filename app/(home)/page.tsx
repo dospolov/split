@@ -9,7 +9,6 @@ import { FriendsPanel } from "@/features/friends/ui/FriendsPanel"
 import { createDemoFriends, createDemoTransactions } from "@/shared/demo/seed"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 export default function Page() {
   const {
@@ -17,6 +16,7 @@ export default function Page() {
     transactions,
     addFriend,
     renameFriend,
+    deleteFriend,
     addTransaction,
     updateTransaction,
     deleteTransaction,
@@ -44,35 +44,12 @@ export default function Page() {
       </section>
 
       {/* Friends */}
-      <section className="space-y-3 rounded-md border p-4">
-        <h2 className="text-sm font-medium">Friends</h2>
-
-        <div className="flex gap-2">
-          <Input
-            placeholder="Add friend name"
-            value={newFriendName}
-            onChange={(e) => setNewFriendName(e.target.value)}
-          />
-          <Button
-            type="button"
-            disabled={!canAddFriend}
-            onClick={() => {
-              const name = newFriendName.trim()
-              if (!name) return
-              addFriend(crypto.randomUUID(), name)
-              setNewFriendName("")
-            }}
-          >
-            Add
-          </Button>
-        </div>
-
-        <FriendsPanel
-          friends={friends}
-          onAdd={addFriend}
-          onRename={renameFriend}
-        />
-      </section>
+      <FriendsPanel
+        friends={friends}
+        onAdd={addFriend}
+        onRename={renameFriend}
+        onDelete={deleteFriend}
+      />
 
       {/* Transactions */}
       <section className="space-y-3 rounded-md border p-4">

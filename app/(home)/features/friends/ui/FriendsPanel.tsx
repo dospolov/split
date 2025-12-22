@@ -10,9 +10,10 @@ type Props = {
   friends: FriendsState
   onAdd: (id: string, name: string) => void
   onRename: (id: string, name: string) => void
+  onDelete: (id: string) => void
 }
 
-export function FriendsPanel({ friends, onAdd, onRename }: Props) {
+export function FriendsPanel({ friends, onAdd, onRename, onDelete }: Props) {
   const [newFriendName, setNewFriendName] = useState("")
 
   const canAdd = newFriendName.trim().length > 0
@@ -51,6 +52,13 @@ export function FriendsPanel({ friends, onAdd, onRename }: Props) {
                 value={friends.byId[id]?.name ?? ""}
                 onChange={(e) => onRename(id, e.target.value)}
               />
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => onDelete(id)}
+              >
+                Delete
+              </Button>
             </div>
           ))}
         </div>
