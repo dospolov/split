@@ -28,7 +28,7 @@ export function DebtMatrix({ friends, transactions }: Props) {
         <thead>
           <tr>
             <th className="px-2 py-1 text-xs text-muted-foreground whitespace-nowrap">
-              Кто должен ↓ / Кому →
+              Who owes ↓ / To whom →
             </th>
             {ids.map((id) => (
               <th
