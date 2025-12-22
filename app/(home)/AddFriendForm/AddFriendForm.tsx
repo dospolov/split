@@ -29,10 +29,8 @@ type FormValues = z.infer<typeof addFrendFormSchema>
 
 export function AddFriendForm({
   addFriend,
-  friends,
 }: {
   addFriend: (friend: Friend) => void
-  friends: Friend[]
 }) {
   const {
     register,
@@ -60,51 +58,43 @@ export function AddFriendForm({
   const isInvalid = touchedFields.name && !!errors.name
 
   return (
-    <div className="flex gap-4">
-      <Card className="w-full w-3/4">
-        <CardHeader>
-          <CardTitle>Add a new friend</CardTitle>
-          <CardDescription>This cannot be changed later.</CardDescription>
-        </CardHeader>
+    <Card>
+      <CardHeader>
+        <CardTitle>Add a new friend</CardTitle>
+        <CardDescription>This cannot be changed later.</CardDescription>
+      </CardHeader>
 
-        <CardContent>
-          <form id="add-friend-form" onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="name">Name</FieldLabel>
+      <CardContent>
+        <form id="add-friend-form" onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Field data-invalid={isInvalid}>
+              <FieldLabel htmlFor="name">Name</FieldLabel>
 
-                <Input
-                  id="name"
-                  placeholder="Alex"
-                  autoComplete="off"
-                  aria-invalid={isInvalid}
-                  {...register("name")}
+              <Input
+                id="name"
+                placeholder="Alex"
+                autoComplete="off"
+                aria-invalid={isInvalid}
+                {...register("name")}
+              />
+
+              {isInvalid && (
+                <FieldError
+                  errors={[{ message: errors.name?.message }].filter(Boolean)}
                 />
+              )}
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
 
-                {isInvalid && (
-                  <FieldError
-                    errors={[{ message: errors.name?.message }].filter(Boolean)}
-                  />
-                )}
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-
-        <CardFooter>
-          <Field orientation="horizontal">
-            <Button type="submit" form="add-friend-form">
-              Add
-            </Button>
-          </Field>
-        </CardFooter>
-      </Card>
-
-      <div className="flex flex-col gap-4 w-1/4">
-        {friends.map((friend) => (
-          <div key={friend.id}>{friend.name}</div>
-        ))}
-      </div>
-    </div>
+      <CardFooter>
+        <Field orientation="horizontal">
+          <Button type="submit" form="add-friend-form">
+            Add
+          </Button>
+        </Field>
+      </CardFooter>
+    </Card>
   )
 }
