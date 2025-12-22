@@ -30,7 +30,7 @@ export function AddExpenseForm({
     defaultValues: {
       title: "",
       amount: 1,
-      fromId: undefined,
+      fromId: "",
       withId: [],
     },
     resolver: zodResolver(addExpenseFormSchema),

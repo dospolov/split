@@ -10,12 +10,11 @@ import type { AddExpenseFormValues } from "../types"
 export function FromField({ friends }: { friends: Friend[] }) {
   const {
     control,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext<AddExpenseFormValues>()
 
-  const isTouched = !!touchedFields.fromId
+  // isTouched = !!touchedFields.fromId
   const hasError = !!errors.fromId
-  const isInvalid = isTouched && hasError
 
   return (
     <FieldSet className="w-3/10 gap-3">
@@ -37,7 +36,7 @@ export function FromField({ friends }: { friends: Friend[] }) {
                   <RadioGroupItem
                     value={friend.id}
                     id={id}
-                    aria-invalid={isInvalid}
+                    aria-invalid={hasError}
                   />
                   <Label htmlFor={id}>{friend.name}</Label>
                 </div>
@@ -47,7 +46,7 @@ export function FromField({ friends }: { friends: Friend[] }) {
         )}
       />
 
-      {isInvalid && (
+      {hasError && (
         <FieldError
           errors={[{ message: errors.fromId?.message }].filter(Boolean)}
         />

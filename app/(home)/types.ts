@@ -17,10 +17,3 @@ export type AddFriendFormValues = z.infer<typeof addFrendFormSchema>
 export type Expense = z.infer<typeof expenseSchema>
 
 export type AddExpenseFormValues = z.infer<typeof addExpenseFormSchema>
-
-// export type AddExpenseFormValues = {
-//   title: string
-//   amount: number
-//   fromId: string | undefined
-//   withId: UUID[]
-// }
