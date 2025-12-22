@@ -5,6 +5,7 @@ import type { Expense, Friend } from "./types"
 import { AddFriendForm } from "./AddFriendForm"
 import { AddExpenseForm } from "./AddExpenseForm"
 import { ExpenseList } from "./ExpenseList"
+import { FriendList } from "./FriendList"
 
 export function HomePage() {
   const [friends, setFriends] = useState<Friend[]>([
@@ -44,9 +45,7 @@ export function HomePage() {
           <AddFriendForm addFriend={addFriend} />
         </div>
         <div className="w-1/4">
-          {friends.map((friend) => (
-            <div key={friend.id}>{friend.name}</div>
-          ))}
+          <FriendList friends={friends} />
         </div>
       </div>
 
