@@ -53,10 +53,11 @@ export function TransactionForm({
         }
       : {
           payerId: "",
-          amount: 1,
+          amount: undefined,
           participantIds: [],
           title: "",
         },
+
     mode: "onBlur",
   })
 
@@ -105,15 +106,32 @@ export function TransactionForm({
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
+
             <Input
               id={field.name}
-              type="number"
-              min={1}
-              step="0.01"
-              value={field.value ?? 1}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              placeholder="e.g. 100"
+              value={field.value == null ? "" : String(field.value)}
+              onChange={(e) => {
+                const raw = e.target.value
+
+                // allow empty
+                if (raw === "") {
+                  field.onChange(undefined)
+                  return
+                }
+
+                // allow only digits (no dot, no minus)
+                if (/^\d+$/.test(raw)) {
+                  field.onChange(Number(raw))
+                }
+                // else ignore invalid char
+              }}
               aria-invalid={fieldState.invalid}
             />
+
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
