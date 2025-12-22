@@ -23,7 +23,11 @@ export function DebtMatrix({ friends, transactions }: Props) {
       <table className="border-collapse text-sm">
         <thead>
           <tr>
-            <th className="px-2 py-1" />
+            {/* Legend cell */}
+            <th className="px-2 py-1 text-xs text-muted-foreground whitespace-nowrap">
+              From ↓ / To →
+            </th>
+
             {ids.map((id) => (
               <th
                 key={id}
@@ -38,12 +42,13 @@ export function DebtMatrix({ friends, transactions }: Props) {
         <tbody>
           {ids.map((rowId, rowIndex) => (
             <tr key={rowId}>
+              {/* Row header */}
               <th className="px-2 py-1 font-medium text-left whitespace-nowrap">
                 {friends.byId[rowId]?.name}
               </th>
 
               {ids.map((colId, colIndex) => {
-                // lower-triangular only; diagonal + upper = empty
+                // показываем только нижний треугольник
                 if (colIndex >= rowIndex) {
                   return <td key={colId} className="px-2 py-1" />
                 }

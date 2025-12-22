@@ -3,23 +3,23 @@ import type { FriendsState, Transaction } from "@/shared/schemas"
 
 export function createDemoFriends(): FriendsState {
   const ivan = crypto.randomUUID()
-  const oleg = crypto.randomUUID()
-  const misha = crypto.randomUUID()
-  const alex = crypto.randomUUID()
+  const marat = crypto.randomUUID()
+  const george = crypto.randomUUID()
+  const dima = crypto.randomUUID()
 
   return {
     byId: {
-      [ivan]: { id: ivan, name: "Иван" },
-      [oleg]: { id: oleg, name: "Олег" },
-      [misha]: { id: misha, name: "Миша" },
-      [alex]: { id: alex, name: "Алекс" },
+      [ivan]: { id: ivan, name: "Ivan" },
+      [marat]: { id: marat, name: "Marat" },
+      [george]: { id: george, name: "George" },
+      [dima]: { id: dima, name: "Dima" },
     },
-    allIds: [ivan, oleg, misha, alex],
+    allIds: [ivan, marat, george, dima],
   }
 }
 
 export function createDemoTransactions(friends: FriendsState): Transaction[] {
-  const [ivan, oleg, misha, alex] = friends.allIds
+  const [ivan, marat, george, dima] = friends.allIds
 
   const now = new Date().toISOString()
 
@@ -28,7 +28,7 @@ export function createDemoTransactions(friends: FriendsState): Transaction[] {
       id: crypto.randomUUID(),
       payerId: ivan,
       amount: 100,
-      participantIds: [ivan, oleg, misha],
+      participantIds: [ivan, marat, george],
       title: "Pizza",
       createdAt: now,
       updatedAt: now,
@@ -36,9 +36,9 @@ export function createDemoTransactions(friends: FriendsState): Transaction[] {
     },
     {
       id: crypto.randomUUID(),
-      payerId: misha,
+      payerId: george,
       amount: 66,
-      participantIds: [oleg, alex],
+      participantIds: [marat, dima],
       title: "Beer",
       createdAt: now,
       updatedAt: now,
