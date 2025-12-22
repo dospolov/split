@@ -5,6 +5,8 @@ import { useMemo, useState } from "react"
 import { useAppStore } from "@/store/useAppStore"
 import { DebtMatrix } from "@/features/ledger/ui/DebtMatrix"
 import { TransactionList } from "@/features/transactions/ui/TransactionList"
+import { FriendsPanel } from "@/features/friends/ui/FriendsPanel"
+import { createDemoFriends, createDemoTransactions } from "@/shared/demo/seed"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -65,20 +67,11 @@ export default function Page() {
           </Button>
         </div>
 
-        {friends.allIds.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No friends yet</div>
-        ) : (
-          <div className="space-y-2">
-            {friends.allIds.map((id) => (
-              <div key={id} className="flex items-center gap-2">
-                <Input
-                  value={friends.byId[id]?.name ?? ""}
-                  onChange={(e) => renameFriend(id, e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <FriendsPanel
+          friends={friends}
+          onAdd={addFriend}
+          onRename={renameFriend}
+        />
       </section>
 
       {/* Transactions */}
@@ -98,6 +91,21 @@ export default function Page() {
         <h2 className="text-sm font-medium">Debts</h2>
         <DebtMatrix friends={friends} transactions={sortedTransactions} />
       </section>
+
+      <Button
+        variant="outline"
+        onClick={() => {
+          const demoFriends = createDemoFriends()
+          const demoTransactions = createDemoTransactions(demoFriends)
+
+          // прямое обновление store
+          localStorage.setItem("friends", JSON.stringify(demoFriends))
+          localStorage.setItem("transactions", JSON.stringify(demoTransactions))
+          location.reload()
+        }}
+      >
+        Load demo data
+      </Button>
     </main>
   )
 }

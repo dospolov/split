@@ -34,6 +34,7 @@ export function useAppStore() {
     "friends",
     createEmptyFriendsState(),
     {
+      initializeWithValue: false,
       serializer: (value) => JSON.stringify(friendsStateSchema.parse(value)),
       deserializer: (value) => friendsStateSchema.parse(JSON.parse(value)),
     },
@@ -44,6 +45,7 @@ export function useAppStore() {
     "transactions",
     [],
     {
+      initializeWithValue: false,
       serializer: (value) =>
         JSON.stringify(value.map((t) => transactionSchema.parse(t))),
       deserializer: (value) =>
