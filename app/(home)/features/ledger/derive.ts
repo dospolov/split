@@ -11,7 +11,7 @@ export type DebtLedger = Record<UUID, Record<UUID, number>>
 
 type DeriveOptions = {
   /**
-   * Decimal rounding used during accumulation to prevent floating drift.
+   * Decimal rounding used during accumulation / netting.
    * 2 is typical for PLN.
    */
   precision?: number
@@ -20,7 +20,6 @@ type DeriveOptions = {
 function roundTo(value: number, precision: number) {
   const m = 10 ** precision
   const rounded = Math.round(value * m) / m
-  // prevent -0
   return Object.is(rounded, -0) ? 0 : rounded
 }
 
@@ -37,7 +36,6 @@ function addDebt(
   const next = roundTo(cur + delta, precision)
 
   if (next <= 0) {
-    // keep it clean: remove zeros
     if (ledger[fromId]) {
       delete ledger[fromId][toId]
       if (Object.keys(ledger[fromId]).length === 0) delete ledger[fromId]
@@ -50,12 +48,47 @@ function addDebt(
 }
 
 /**
- * Creates a directed debt ledger from transactions.
+ * Net mutual debts:
+ * if A owes B = x and B owes A = y,
+ * keep only one direction with |x-y|.
+ */
+function netLedger(ledger: DebtLedger, precision: number): DebtLedger {
+  const result: DebtLedger = {}
+  const seen = new Set<string>()
+
+  for (const a of Object.keys(ledger)) {
+    for (const b of Object.keys(ledger[a] ?? {})) {
+      if (a === b) continue
+
+      const key = a < b ? `${a}|${b}` : `${b}|${a}`
+      if (seen.has(key)) continue
+      seen.add(key)
+
+      const ab = ledger[a]?.[b] ?? 0
+      const ba = ledger[b]?.[a] ?? 0
+      const diff = roundTo(ab - ba, precision)
+
+      if (diff > 0) {
+        result[a] ??= {}
+        result[a][b] = diff // a owes b
+      } else if (diff < 0) {
+        result[b] ??= {}
+        result[b][a] = roundTo(-diff, precision) // b owes a
+      }
+      // diff === 0 => nothing kept
+    }
+  }
+
+  return result
+}
+
+/**
+ * Creates a directed debt ledger from transactions (then nets mutual debts).
  *
  * Rule:
  * - amount is split equally across participantIds
  * - each participant (except payer) owes payer their share
- * - payer may or may not be in participants (both are supported)
+ * - payer may or may not be in participants
  */
 export function deriveDebtLedger(
   friends: FriendsState,
@@ -71,7 +104,6 @@ export function deriveDebtLedger(
     const payerId = tx.payerId
     const participants = tx.participantIds.filter((id) => friendSet.has(id))
 
-    // if payer is unknown (was removed) or participants empty, skip safely
     if (!friendSet.has(payerId)) continue
     if (participants.length === 0) continue
 
@@ -83,21 +115,6 @@ export function deriveDebtLedger(
     }
   }
 
-  return ledger
-}
-
-/**
- * Convenience for your lower-triangular UI:
- * - rows/cols come from friends.allIds order
- * - cell is "number | null" where null = render empty
- *
- * You can render only i > j (lower triangle) and show null as empty.
- */
-export function deriveDebtCell(
-  ledger: DebtLedger,
-  fromId: UUID,
-  toId: UUID,
-): number | null {
-  const v = ledger[fromId]?.[toId] ?? 0
-  return v === 0 ? null : v
+  // critical: net mutual debts so UI shows reduced totals
+  return netLedger(ledger, precision)
 }

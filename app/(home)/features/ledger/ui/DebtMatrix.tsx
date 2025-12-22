@@ -1,9 +1,10 @@
 // features/ledger/ui/DebtMatrix.tsx
 "use client"
 
+import { useMemo } from "react"
 import type { FriendsState, Transaction } from "@/shared/schemas"
 import { cn } from "@/lib/utils"
-import { deriveDebtCell, deriveDebtLedger } from "../derive"
+import { deriveDebtLedger } from "../derive"
 
 type Props = {
   friends: FriendsState
@@ -11,8 +12,11 @@ type Props = {
 }
 
 export function DebtMatrix({ friends, transactions }: Props) {
-  const ledger = deriveDebtLedger(friends, transactions)
   const ids = friends.allIds
+
+  const ledger = useMemo(() => {
+    return deriveDebtLedger(friends, transactions)
+  }, [friends, transactions])
 
   if (ids.length === 0) {
     return <div className="text-sm text-muted-foreground">No friends yet</div>
@@ -23,11 +27,9 @@ export function DebtMatrix({ friends, transactions }: Props) {
       <table className="border-collapse text-sm">
         <thead>
           <tr>
-            {/* Legend cell */}
             <th className="px-2 py-1 text-xs text-muted-foreground whitespace-nowrap">
-              From ↓ / To →
+              Кто должен ↓ / Кому →
             </th>
-
             {ids.map((id) => (
               <th
                 key={id}
@@ -40,30 +42,34 @@ export function DebtMatrix({ friends, transactions }: Props) {
         </thead>
 
         <tbody>
-          {ids.map((rowId, rowIndex) => (
+          {ids.map((rowId) => (
             <tr key={rowId}>
-              {/* Row header */}
               <th className="px-2 py-1 font-medium text-left whitespace-nowrap">
                 {friends.byId[rowId]?.name}
               </th>
 
-              {ids.map((colId, colIndex) => {
-                // показываем только нижний треугольник
-                if (colIndex >= rowIndex) {
+              {ids.map((colId) => {
+                // диагональ пустая
+                if (colId === rowId) {
                   return <td key={colId} className="px-2 py-1" />
                 }
 
-                const value = deriveDebtCell(ledger, rowId, colId)
+                const value = ledger[rowId]?.[colId] ?? 0
 
                 return (
                   <td
                     key={colId}
                     className={cn(
-                      "px-2 py-1 text-right min-w-[3rem]",
-                      value ? "font-medium" : "text-muted-foreground",
+                      "px-2 py-1 text-right min-w-[4rem]",
+                      value > 0 ? "font-medium" : "text-muted-foreground",
                     )}
+                    title={
+                      value > 0
+                        ? `${friends.byId[rowId]?.name} owes ${friends.byId[colId]?.name}`
+                        : undefined
+                    }
                   >
-                    {value ?? ""}
+                    {value > 0 ? value : ""}
                   </td>
                 )
               })}
