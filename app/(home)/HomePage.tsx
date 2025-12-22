@@ -49,14 +49,8 @@ export function HomePage() {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="w-3/4">
-          <AddExpenseForm addExpense={addExpense} friends={friends} />
-        </div>
-        <div className="flex flex-col gap-4 w-1/4">
-          <ExpenseList expenses={expenses} friends={friends} />
-        </div>
-      </div>
+      <AddExpenseForm addExpense={addExpense} friends={friends} />
+      <ExpenseList expenses={expenses} friends={friends} />
     </>
   )
 }
