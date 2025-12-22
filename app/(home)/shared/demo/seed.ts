@@ -35,7 +35,7 @@ export function createDemoTransactions(friends: FriendsState): Transaction[] {
     {
       id: crypto.randomUUID(),
       payerId: george,
-      amount: 66,
+      amount: 100,
       participantIds: [marat, george],
       title: "Beer",
       createdAt: now,

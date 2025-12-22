@@ -178,6 +178,16 @@ export function useAppStore() {
     [setTransactions],
   )
 
+  const resetAll = useCallback(() => {
+    // очистить localStorage
+    localStorage.removeItem("friends")
+    localStorage.removeItem("transactions")
+
+    // сбросить in-memory state
+    setFriends(createEmptyFriendsState())
+    setTransactions([])
+  }, [setFriends, setTransactions])
+
   return {
     friends,
     transactions,
@@ -189,5 +199,7 @@ export function useAppStore() {
     addTransaction,
     updateTransaction,
     deleteTransaction,
+
+    resetAll,
   }
 }

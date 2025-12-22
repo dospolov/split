@@ -20,6 +20,7 @@ export default function Page() {
     addTransaction,
     updateTransaction,
     deleteTransaction,
+    resetAll,
   } = useAppStore()
 
   // stable display: sort by createdAt (oldest -> newest)
@@ -69,20 +70,40 @@ export default function Page() {
         <DebtMatrix friends={friends} transactions={sortedTransactions} />
       </section>
 
-      <Button
-        variant="outline"
-        onClick={() => {
-          const demoFriends = createDemoFriends()
-          const demoTransactions = createDemoTransactions(demoFriends)
+      <footer className="flex items-center gap-2 pt-6">
+        <Button
+          variant="outline"
+          onClick={() => {
+            const demoFriends = createDemoFriends()
+            const demoTransactions = createDemoTransactions(demoFriends)
 
-          // прямое обновление store
-          localStorage.setItem("friends", JSON.stringify(demoFriends))
-          localStorage.setItem("transactions", JSON.stringify(demoTransactions))
-          location.reload()
-        }}
-      >
-        Load demo data
-      </Button>
+            localStorage.setItem("friends", JSON.stringify(demoFriends))
+            localStorage.setItem(
+              "transactions",
+              JSON.stringify(demoTransactions),
+            )
+            location.reload()
+          }}
+        >
+          Load demo data
+        </Button>
+
+        <Button
+          variant="destructive"
+          onClick={() => {
+            if (
+              !confirm(
+                "Clear everything? This will remove all friends and transactions.",
+              )
+            ) {
+              return
+            }
+            resetAll()
+          }}
+        >
+          Clear everything
+        </Button>
+      </footer>
     </main>
   )
 }
