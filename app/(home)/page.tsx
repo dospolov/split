@@ -36,7 +36,7 @@ export default function Page() {
   const canAddFriend = newFriendName.trim().length > 0
 
   return (
-    <main className="mx-auto max-w-5xl p-6 space-y-8">
+    <main className="mx-auto max-w-2xl p-6 space-y-8">
       <section className="space-y-3">
         <h1 className="text-xl font-semibold">Split</h1>
         <p className="text-sm text-muted-foreground">
