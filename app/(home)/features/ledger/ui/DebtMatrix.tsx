@@ -24,17 +24,14 @@ export function DebtMatrix({ friends, transactions }: Props) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="border-collapse text-sm">
+      <table className="border-collapse text-sm table-auto w-max">
         <thead>
           <tr>
-            <th className="px-2 py-1 text-xs text-muted-foreground whitespace-nowrap">
+            <th className="px-2 py-1 text-xs text-muted-foreground text-left">
               Who owes ↓ / To whom →
             </th>
             {ids.map((id) => (
-              <th
-                key={id}
-                className="px-2 py-1 font-medium text-left whitespace-nowrap"
-              >
+              <th key={id} className="px-2 py-1 font-medium text-left">
                 {friends.byId[id]?.name}
               </th>
             ))}
@@ -42,8 +39,8 @@ export function DebtMatrix({ friends, transactions }: Props) {
         </thead>
 
         <tbody>
-          {ids.map((rowId) => (
-            <tr key={rowId}>
+          {ids.map((rowId, rowIndex) => (
+            <tr key={rowId} className={cn(rowIndex % 2 === 1 && "bg-muted/30")}>
               <th className="px-2 py-1 font-medium text-left whitespace-nowrap">
                 {friends.byId[rowId]?.name}
               </th>
@@ -60,7 +57,7 @@ export function DebtMatrix({ friends, transactions }: Props) {
                   <td
                     key={colId}
                     className={cn(
-                      "px-2 py-1 text-right min-w-[4rem]",
+                      "px-2 py-1 text-center",
                       value > 0 ? "font-medium" : "text-muted-foreground",
                     )}
                     title={
