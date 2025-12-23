@@ -36,7 +36,7 @@ export default function Page() {
   const canAddFriend = newFriendName.trim().length > 0
 
   return (
-    <main className="mx-auto max-w-2xl px-2 md:px-6 py-6  space-y-8">
+    <main className="mx-auto max-w-2xl p-6 space-y-8">
       <section className="space-y-3">
         <h1 className="text-xl font-semibold">Split</h1>
         <p className="text-sm text-muted-foreground">
@@ -52,21 +52,16 @@ export default function Page() {
         onDelete={deleteFriend}
       />
 
-      {/* Transactions */}
-      <section className="space-y-3 rounded-md border p-2 md:p-4">
-        <h2 className="text-sm font-medium">Transactions</h2>
-        <TransactionList
-          friends={friends}
-          transactions={sortedTransactions}
-          onAdd={(value) => addTransaction(value)}
-          onUpdate={(id, value) => updateTransaction(id, value)}
-          onDelete={(id) => deleteTransaction(id)}
-        />
-      </section>
+      <TransactionList
+        friends={friends}
+        transactions={sortedTransactions}
+        onAdd={(value) => addTransaction(value)}
+        onUpdate={(id, value) => updateTransaction(id, value)}
+        onDelete={(id) => deleteTransaction(id)}
+      />
 
       {/* Debts */}
-      <section className="space-y-3 rounded-md border p-2 md:p-4">
-        <h2 className="text-sm font-medium">Debts</h2>
+      <section className="space-y-3 md:p-4">
         <DebtMatrix friends={friends} transactions={sortedTransactions} />
       </section>
 
