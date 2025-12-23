@@ -19,7 +19,7 @@ export function FriendsPanel({ friends, onAdd, onRename, onDelete }: Props) {
   const canAdd = newFriendName.trim().length > 0
 
   return (
-    <section className="space-y-3 rounded-md border p-4">
+    <section className="space-y-3 rounded-md border p-2 md:p-4">
       <h2 className="text-sm font-medium">Friends</h2>
 
       <div className="flex gap-2">

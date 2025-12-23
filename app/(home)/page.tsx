@@ -36,7 +36,7 @@ export default function Page() {
   const canAddFriend = newFriendName.trim().length > 0
 
   return (
-    <main className="mx-auto max-w-2xl p-6 space-y-8">
+    <main className="mx-auto max-w-2xl px-2 md:px-6 py-6  space-y-8">
       <section className="space-y-3">
         <h1 className="text-xl font-semibold">Split</h1>
         <p className="text-sm text-muted-foreground">
@@ -53,7 +53,7 @@ export default function Page() {
       />
 
       {/* Transactions */}
-      <section className="space-y-3 rounded-md border p-4">
+      <section className="space-y-3 rounded-md border p-2 md:p-4">
         <h2 className="text-sm font-medium">Transactions</h2>
         <TransactionList
           friends={friends}
@@ -65,7 +65,7 @@ export default function Page() {
       </section>
 
       {/* Debts */}
-      <section className="space-y-3 rounded-md border p-4">
+      <section className="space-y-3 rounded-md border p-2 md:p-4">
         <h2 className="text-sm font-medium">Debts</h2>
         <DebtMatrix friends={friends} transactions={sortedTransactions} />
       </section>
