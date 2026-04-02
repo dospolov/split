@@ -34,6 +34,7 @@ type Props = {
   initial?: Transaction
   onSubmit: (value: TransactionInput) => void
   onCancel?: () => void
+  formTestId?: string
 }
 
 export function TransactionForm({
@@ -41,6 +42,7 @@ export function TransactionForm({
   initial,
   onSubmit,
   onCancel,
+  formTestId,
 }: Props) {
   const form = useForm<TransactionInput>({
     resolver: zodResolver(transactionInputSchema),
@@ -74,6 +76,7 @@ export function TransactionForm({
 
   return (
     <form
+      data-testid={formTestId}
       noValidate
       className="space-y-4"
       onSubmit={form.handleSubmit((value) => {
@@ -100,6 +103,7 @@ export function TransactionForm({
             <Input
               {...field}
               id={field.name}
+              data-testid="split-transaction-title-input"
               placeholder="Pizza, beer, taxi…"
               autoComplete="off"
               aria-invalid={fieldState.invalid}
@@ -119,6 +123,7 @@ export function TransactionForm({
             <FieldLabel htmlFor={field.name}>Amount</FieldLabel>
             <Input
               id={field.name}
+              data-testid="split-transaction-amount-input"
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"

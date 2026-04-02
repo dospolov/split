@@ -34,15 +34,25 @@ export function TransactionList({
   return (
     <div className="space-y-6">
       {/* Add new */}
-      <div className="rounded-md border p-4">
+      <div
+        className="rounded-md border p-4"
+        data-testid="split-transaction-add-section"
+      >
         <h3 className="mb-3 text-sm font-medium">Add transaction</h3>
-        <TransactionForm friends={friends} onSubmit={(value) => onAdd(value)} />
+        <TransactionForm
+          friends={friends}
+          formTestId="split-add-transaction-form"
+          onSubmit={(value) => onAdd(value)}
+        />
       </div>
 
       {/* List */}
       <div className="space-y-3">
         {transactions.length === 0 && (
-          <div className="text-sm text-muted-foreground">
+          <div
+            className="text-sm text-muted-foreground"
+            data-testid="split-no-transactions"
+          >
             No transactions yet
           </div>
         )}
@@ -57,7 +67,11 @@ export function TransactionList({
           const isEditing = editingId === tx.id
 
           return (
-            <div key={tx.id} className="rounded-md border p-4">
+            <div
+              key={tx.id}
+              className="rounded-md border p-4"
+              data-testid="split-transaction-card"
+            >
               {!isEditing && (
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
@@ -99,6 +113,7 @@ export function TransactionList({
               {isEditing && (
                 <TransactionForm
                   friends={friends}
+                  formTestId="split-edit-transaction-form"
                   initial={tx}
                   onSubmit={(value) => {
                     onUpdate(tx.id, value)
