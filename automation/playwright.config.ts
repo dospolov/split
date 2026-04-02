@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -5,14 +6,25 @@ import { defineConfig, devices } from "@playwright/test";
  * https://github.com/motdotla/dotenv
  */
 // import dotenv from 'dotenv';
-// import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 
-const baseURL = process.env.BASE_URL ?? "https://split.dospolov.com";
+const defaultBaseURL = "http://localhost:3000";
+const baseURL = process.env.BASE_URL ?? defaultBaseURL;
+
+function isLocalBaseURL(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.hostname === "localhost" || u.hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+}
+
+const repoRoot = path.join(__dirname, "..");
 
 export default defineConfig({
   testDir: "./tests",
@@ -38,10 +50,15 @@ export default defineConfig({
     },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  ...(isLocalBaseURL(baseURL)
+    ? {
+        webServer: {
+          command: "npm run dev",
+          cwd: repoRoot,
+          url: baseURL,
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+        },
+      }
+    : {}),
 });
