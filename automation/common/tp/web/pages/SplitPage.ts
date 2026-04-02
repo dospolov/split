@@ -54,7 +54,7 @@ export class SplitPage extends BasePage {
       has: this.page.getByRole("button", { name: "Save" }).first(),
     });
     const titleInput = editForm
-      .locator('inpit[placeholder="Pizza, beer, taxi…"]')
+      .locator('input[placeholder="Pizza, beer, taxi…"]')
       .first();
     const amountInput = editForm
       .locator('input[placeholder="e.g. 100"]')
@@ -73,7 +73,7 @@ export class SplitPage extends BasePage {
       .first();
     if (nextTitle) {
       await editForm
-        .locator('inpit[placeholder="Pizza, beer, taxi…"]')
+        .locator('input[placeholder="Pizza, beer, taxi…"]')
         .first()
         .fill(nextTitle);
     }
