@@ -4,13 +4,12 @@ export class FriendsComponents {
   constructor(private readonly page: Page) {}
 
   private get addFriendInput() {
-    return this.page.getByPlaceholder("Add friend name");
+    return this.page.getByTestId("split-friend-add-input");
   }
 
   private get addFriendButton() {
     return this.page
-      .locator("section")
-      .filter({ hasText: "Friends" })
+      .getByTestId("split-friends-panel")
       .getByRole("button", { name: "Add" })
       .first();
   }

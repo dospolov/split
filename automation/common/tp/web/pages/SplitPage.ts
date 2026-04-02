@@ -24,7 +24,7 @@ export class SplitPage extends BasePage {
 
   transactionsCard(title: string) {
     return this.page
-      .locator("div.rounded-md.border.p-4")
+      .getByTestId("split-transaction-card")
       .filter({ hasText: title });
   }
 
@@ -33,7 +33,9 @@ export class SplitPage extends BasePage {
   }
 
   async deleteTransaction(title: string) {
-    await this.transactionEditButton(title).click();
+    await this.transactionsCard(title)
+      .getByRole("button", { name: "Delete" })
+      .click();
   }
 
   async startEditTransaction(title: string) {
@@ -50,15 +52,9 @@ export class SplitPage extends BasePage {
     nextAmount: number;
   }) {
     await this.startEditTransaction(originalTitle);
-    const editForm = this.page.locator("form", {
-      has: this.page.getByRole("button", { name: "Save" }).first(),
-    });
-    const titleInput = editForm
-      .locator('input[placeholder="Pizza, beer, taxi…"]')
-      .first();
-    const amountInput = editForm
-      .locator('input[placeholder="e.g. 100"]')
-      .first();
+    const editForm = this.page.getByTestId("split-edit-transaction-form");
+    const titleInput = editForm.getByTestId("split-transaction-title-input");
+    const amountInput = editForm.getByTestId("split-transaction-amount-input");
     await titleInput.fill(nextTitle);
     await amountInput.fill(String(nextAmount));
     await editForm.getByRole("button", { name: "Save" }).click();
@@ -66,26 +62,19 @@ export class SplitPage extends BasePage {
 
   async cancelEditTransaction(title: string, nextTitle?: string) {
     await this.startEditTransaction(title);
-    const editForm = this.page
-      .locator("form", {
-        has: this.page.getByRole("button", { name: "Cancel" }),
-      })
-      .first();
+    const editForm = this.page.getByTestId("split-edit-transaction-form");
     if (nextTitle) {
-      await editForm
-        .locator('input[placeholder="Pizza, beer, taxi…"]')
-        .first()
-        .fill(nextTitle);
+      await editForm.getByTestId("split-transaction-title-input").fill(nextTitle);
     }
     await editForm.getByRole("button", { name: "Cancel" }).click();
   }
 
   noFriendsMessage() {
-    return this.page.getByText("No friends yet").first();
+    return this.page.getByTestId("split-no-friends");
   }
 
   noTransactionsMessage() {
-    return this.page.getByText("No transactions yet");
+    return this.page.getByTestId("split-no-transactions");
   }
 
   friendInput(name: string) {

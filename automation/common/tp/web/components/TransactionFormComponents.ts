@@ -9,24 +9,24 @@ type AddTransactionInput = {
 export class TransactionFormComponent {
   constructor(private readonly page: Page) {}
 
+  private get addSection() {
+    return this.page.getByTestId("split-transaction-add-section");
+  }
+
   private get titleInput() {
-    return this.page.getByLabel("Title").first();
+    return this.addSection.getByLabel("Title");
   }
 
   private get amountInput() {
-    return this.page.getByLabel("Amount").first();
+    return this.addSection.getByLabel("Amount");
   }
 
   private get payerSelect() {
-    return this.page.getByLabel("Payer").first();
+    return this.addSection.getByLabel("Payer");
   }
 
   private get addButton() {
-    return this.page
-      .locator("div")
-      .filter({ hasText: "Add transaction" })
-      .getByRole("button", { name: "Add" })
-      .first();
+    return this.addSection.getByRole("button", { name: "Add" });
   }
 
   async addTransaction(input: AddTransactionInput) {

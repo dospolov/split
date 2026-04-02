@@ -78,13 +78,15 @@ test.describe("TP UI flows", () => {
       nextAmount: 35,
     });
 
-    await expect(splitUi.pageObject.transactionsCard("Taxi")).toBeVisible();
-    await expect(splitUi.pageObject.transactionsCard("Taxi")).toContainText(
-      "Alice paid 35",
-    );
-    await expect(splitUi.pageObject.transactionsCard("Taxi")).toContainText(
-      "edited",
-    );
+    await expect(
+      splitUi.pageObject.transactionsCard("Taxi Updated"),
+    ).toBeVisible();
+    await expect(
+      splitUi.pageObject.transactionsCard("Taxi Updated"),
+    ).toContainText("Alice paid 35");
+    await expect(
+      splitUi.pageObject.transactionsCard("Taxi Updated"),
+    ).toContainText("edited");
   });
 
   test("cancels transaction edit and keeps old values", async ({ splitUi }) => {
