@@ -104,6 +104,10 @@ export class SplitPage extends BasePage {
     await this.page.getByRole("button", { name: "Load demo data" }).click();
   }
 
+  async expectFriendVisible(name: string) {
+    await expect(this.friendInput(name)).toBeVisible();
+  }
+
   async clickClearEverything(accept = true) {
     this.page.once("dialog", (dialog) => {
       if (accept) {

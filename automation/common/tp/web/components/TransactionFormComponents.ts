@@ -4,9 +4,8 @@ type AddTransactionInput = {
   title?: string;
   amount: number;
   payerName: string;
-  participantNames: string[];
+  participants: string[];
 };
-
 export class TransactionFormComponent {
   constructor(private readonly page: Page) {}
 
@@ -36,7 +35,7 @@ export class TransactionFormComponent {
     await this.payerSelect.click();
     await this.page.getByRole("option", { name: input.payerName }).click();
 
-    for (const participantName of input.participantNames) {
+    for (const participantName of input.participants) {
       const label = this.page
         .locator("label", { hasText: participantName })
         .first();
