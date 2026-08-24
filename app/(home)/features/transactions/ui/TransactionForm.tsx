@@ -184,7 +184,9 @@ export function TransactionForm({
             <FieldLabel htmlFor={field.name}>{payerLabel}</FieldLabel>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger id={field.name} aria-invalid={fieldState.invalid}>
-                <SelectValue placeholder={`Select ${payerLabel.toLowerCase()}`} />
+                <SelectValue
+                  placeholder={`Select ${payerLabel.toLowerCase()}`}
+                />
               </SelectTrigger>
               <SelectContent>
                 {friendIds.map((id) => (
@@ -230,7 +232,7 @@ export function TransactionForm({
         )}
       />
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-12">
         <Button type="submit">{initial ? "Save" : "Add"}</Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
