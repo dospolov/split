@@ -33,6 +33,7 @@ export const transactionSchema = z.object({
   id: uuidSchema,
   payerId: uuidSchema,
   amount: z.number().min(1, "Amount must be at least 1."),
+  type: z.enum(["expense", "earning"]).default("expense"),
   participantIds: z
     .array(uuidSchema)
     .min(1, "Select at least one participant."),
@@ -51,6 +52,7 @@ export type Transaction = z.infer<typeof transactionSchema>
 export const transactionInputSchema = z.object({
   payerId: uuidSchema,
   amount: z.number().min(1, "Amount must be at least 1."),
+  type: z.enum(["expense", "earning"]),
   participantIds: z
     .array(uuidSchema)
     .min(1, "Select at least one participant."),

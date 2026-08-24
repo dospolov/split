@@ -111,7 +111,12 @@ export function deriveDebtLedger(
 
     for (const participantId of participants) {
       if (participantId === payerId) continue
-      addDebt(ledger, participantId, payerId, share, precision)
+      // expense: participant owes payer; earning: payer owes participant
+      if (tx.type === "earning") {
+        addDebt(ledger, payerId, participantId, share, precision)
+      } else {
+        addDebt(ledger, participantId, payerId, share, precision)
+      }
     }
   }
 

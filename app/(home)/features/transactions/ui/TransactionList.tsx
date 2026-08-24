@@ -65,7 +65,8 @@ export function TransactionList({
                       {tx.title || "Transaction"}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {payerName} paid {tx.amount}
+                      {payerName} {tx.type === "earning" ? "received" : "paid"}{" "}
+                      {tx.amount}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       Participants: {participantNames || "—"}

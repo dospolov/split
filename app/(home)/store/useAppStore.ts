@@ -138,6 +138,7 @@ export function useAppStore() {
           id: crypto.randomUUID(),
           payerId: input.payerId,
           amount: input.amount,
+          type: input.type,
           participantIds: input.participantIds,
           title: input.title,
           createdAt: nowIso(),

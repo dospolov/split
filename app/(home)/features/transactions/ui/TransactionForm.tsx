@@ -48,12 +48,14 @@ export function TransactionForm({
       ? {
           payerId: initial.payerId,
           amount: initial.amount,
+          type: initial.type,
           participantIds: initial.participantIds,
           title: initial.title,
         }
       : {
           payerId: "",
           amount: undefined,
+          type: "expense",
           participantIds: [],
           title: "",
         },
@@ -65,12 +67,14 @@ export function TransactionForm({
     form.reset({
       payerId: initial.payerId,
       amount: initial.amount,
+      type: initial.type,
       participantIds: initial.participantIds,
       title: initial.title,
     })
   }, [initial, form])
 
   const friendIds = friends.allIds
+  const payerLabel = form.watch("type") === "earning" ? "Receiver" : "Payer"
 
   return (
     <form
@@ -84,6 +88,7 @@ export function TransactionForm({
           form.reset({
             payerId: "",
             amount: undefined,
+            type: "expense",
             participantIds: [],
             title: "",
           })
@@ -143,16 +148,43 @@ export function TransactionForm({
         )}
       />
 
+      {/* Transaction type */}
+      <Controller
+        name="type"
+        control={form.control}
+        render={({ field }) => (
+          <Field>
+            <FieldLabel>Transaction type</FieldLabel>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={field.value === "expense" ? "default" : "outline"}
+                onClick={() => field.onChange("expense")}
+              >
+                Expenses
+              </Button>
+              <Button
+                type="button"
+                variant={field.value === "earning" ? "default" : "outline"}
+                onClick={() => field.onChange("earning")}
+              >
+                Earnings
+              </Button>
+            </div>
+          </Field>
+        )}
+      />
+
       {/* Payer */}
       <Controller
         name="payerId"
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Payer</FieldLabel>
+            <FieldLabel htmlFor={field.name}>{payerLabel}</FieldLabel>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger id={field.name} aria-invalid={fieldState.invalid}>
-                <SelectValue placeholder="Select payer" />
+                <SelectValue placeholder={`Select ${payerLabel.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
                 {friendIds.map((id) => (
